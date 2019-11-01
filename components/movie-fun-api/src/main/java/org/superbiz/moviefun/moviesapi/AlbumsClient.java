@@ -15,42 +15,47 @@ package org.superbiz.moviefun.moviesapi; /**
  * limitations under the License.
  */
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestOperations;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
+import static org.springframework.http.HttpMethod.GET;
+
 @Repository
 public class AlbumsClient {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Transactional
-    public void addAlbum(Album album) {
-        entityManager.persist(album);
+    private final RestOperations restOperations;
+    private final String albumUrl;
+    private static ParameterizedTypeReference<List<AlbumInfo>> albumListType = new ParameterizedTypeReference<List<AlbumInfo>>() {
+    };
+    public AlbumsClient(String albumsUrl, RestOperations restOperations) {
+        this.restOperations = restOperations;
+        this.albumUrl = albumsUrl;
     }
 
-    public Album find(long id) {
-        return entityManager.find(Album.class, id);
+
+    public void addAlbum(AlbumInfo albumInfo) {
+        restOperations.postForEntity(albumUrl, albumInfo, AlbumInfo.class);
     }
 
-    public List<Album> getAlbums() {
-        CriteriaQuery<Album> cq = entityManager.getCriteriaBuilder().createQuery(Album.class);
-        cq.select(cq.from(Album.class));
-        return entityManager.createQuery(cq).getResultList();
+    public AlbumInfo find(long id) {
+        return restOperations.getForObject(albumUrl + "/" + id , AlbumInfo.class);
     }
 
-    @Transactional
-    public void deleteAlbum(Album album) {
-        entityManager.remove(album);
+    public List<AlbumInfo> getAlbums() {
+        return restOperations.exchange(albumUrl, GET, null, albumListType).getBody();
     }
 
-    @Transactional
-    public void updateAlbum(Album album) {
-        entityManager.merge(album);
+    public void deleteAlbum(AlbumInfo albumInfo) {
+        restOperations.delete(albumUrl+ "/" + albumInfo.getId());
+    }
+
+    public void updateAlbum(AlbumInfo albumInfo) {
+        restOperations.put(albumUrl+ "/" + albumInfo.getId(), albumInfo, AlbumInfo.class);
     }
 }

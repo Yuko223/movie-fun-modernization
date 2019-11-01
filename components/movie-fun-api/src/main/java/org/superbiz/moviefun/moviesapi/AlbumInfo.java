@@ -1,4 +1,4 @@
-package org.superbiz.moviefun.albums; /**
+package org.superbiz.moviefun.moviesapi; /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -20,11 +20,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
-public class Album implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class AlbumInfo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,10 +34,10 @@ public class Album implements Serializable {
     private int year;
     private int rating;
 
-    public Album() {
+    public AlbumInfo() {
     }
 
-    public Album(String artist, String title, int year, int rating) {
+    public AlbumInfo(String artist, String title, int year, int rating) {
         this.artist = artist;
         this.title = title;
         this.year = year;
@@ -53,9 +52,6 @@ public class Album implements Serializable {
         this.id = id;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
 
     public String getArtist() {
         return artist;
@@ -93,7 +89,7 @@ public class Album implements Serializable {
         return id != null;
     }
 
-    public boolean isEquivalent(Album other) {
+    public boolean isEquivalent(AlbumInfo other) {
         if (year != other.year) return false;
         if (!isEqual(title, other.title)) return false;
         if (!isEqual(artist, other.artist)) return false;
@@ -104,5 +100,22 @@ public class Album implements Serializable {
     private static <T> boolean isEqual(T one, T other) {
         if (one != null ? !one.equals(other) : other != null) return false;
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AlbumInfo albumInfo = (AlbumInfo) o;
+        return year == albumInfo.year &&
+                rating == albumInfo.rating &&
+                id.equals(albumInfo.id) &&
+                artist.equals(albumInfo.artist) &&
+                title.equals(albumInfo.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, artist, title, year, rating);
     }
 }

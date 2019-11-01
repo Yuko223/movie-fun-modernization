@@ -27,11 +27,15 @@ public class AlbumsController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final AlbumsBean albumsBean;
-    private final BlobStore blobStore;
+//    private final BlobStore blobStore;
 
-    public AlbumsController(AlbumsBean albumsBean, BlobStore blobStore) {
+/*    public AlbumsController(AlbumsBean albumsBean, BlobStore blobStore) {
         this.albumsBean = albumsBean;
         this.blobStore = blobStore;
+    }*/
+
+    public AlbumsController(AlbumsBean albumsBean) {
+        this.albumsBean = albumsBean;
     }
 
 
@@ -47,7 +51,7 @@ public class AlbumsController {
         return "albumDetails";
     }
 
-    @PostMapping("/{albumId}/cover")
+/*    @PostMapping("/{albumId}/cover")
     public String uploadCover(@PathVariable Long albumId, @RequestParam("file") MultipartFile uploadedFile) {
         logger.debug("Uploading cover for album with id {}", albumId);
 
@@ -61,9 +65,9 @@ public class AlbumsController {
         }
 
         return format("redirect:/albums/%d", albumId);
-    }
+    }*/
 
-    @GetMapping("/{albumId}/cover")
+/*    @GetMapping("/{albumId}/cover")
     public HttpEntity<byte[]> getCover(@PathVariable long albumId) throws IOException, URISyntaxException {
         Optional<Blob> maybeCoverBlob = blobStore.get(getCoverBlobName(albumId));
         Blob coverBlob = maybeCoverBlob.orElseGet(this::buildDefaultCoverBlob);
@@ -75,10 +79,10 @@ public class AlbumsController {
         headers.setContentLength(imageBytes.length);
 
         return new HttpEntity<>(imageBytes, headers);
-    }
+    }*/
 
 
-    private void tryToUploadCover(@PathVariable Long albumId, @RequestParam("file") MultipartFile uploadedFile) throws IOException {
+/*    private void tryToUploadCover(@PathVariable Long albumId, @RequestParam("file") MultipartFile uploadedFile) throws IOException {
         Blob coverBlob = new Blob(
             getCoverBlobName(albumId),
             uploadedFile.getInputStream(),
@@ -86,9 +90,9 @@ public class AlbumsController {
         );
 
         blobStore.put(coverBlob);
-    }
+    }*/
 
-    private Blob buildDefaultCoverBlob() {
+/*    private Blob buildDefaultCoverBlob() {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream input = classLoader.getResourceAsStream("default-cover.jpg");
 
@@ -97,5 +101,5 @@ public class AlbumsController {
 
     private String getCoverBlobName(@PathVariable long albumId) {
         return format("covers/%d", albumId);
-    }
+    }*/
 }
