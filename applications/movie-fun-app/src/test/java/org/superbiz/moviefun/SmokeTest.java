@@ -1,6 +1,7 @@
 package org.superbiz.moviefun;
 
 import org.junit.Test;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import static org.hamcrest.CoreMatchers.containsString;
