@@ -1,0 +1,28 @@
+import org.flywaydb.gradle.FlywayExtension
+import org.flywaydb.gradle.task.FlywayMigrateTask
+
+buildscript {
+    dependencies {
+        classpath "mysql:mysql-connector-java:$mysqlVersion"
+    }
+}
+
+plugins {
+    id "org.flywaydb.flyway" version "5.2.1"
+}
+
+flyway {
+    url = "jdbc:mysql://localhost:3306/movies?useSSL=false"
+    user = "root"
+    outOfOrder = false
+}
+
+task cfMigrate(type: FlywayMigrateTask) {
+    extension = new FlywayExtension(
+            url: "jdbc:mysql://localhost:63307/service_instance_db?useSSL=false",
+            user: "a1de84a683f147d4b0bdd83ead65b7f6",
+            password: "1p8596d949zi1iw1",
+            outOfOrder: false,
+            baselineOnMigrate: true
+    )
+}
