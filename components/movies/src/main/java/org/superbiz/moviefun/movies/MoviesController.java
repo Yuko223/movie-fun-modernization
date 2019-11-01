@@ -1,4 +1,4 @@
 package org.superbiz.moviefun.movies;
 
-public class Movie {
+public class MoviesController {
 }
